@@ -261,7 +261,7 @@ for col in sensor_col:
 # We tried 3 method 
 # 1) The IQR is very sensitive, and it mark a large number of rows as outliers 
 # 2) Chauvenet is less sensitive and depends on data distribution
-# 3) of its measure if the point has  number of neighbors beside it or not, if not, it will be an outlier.
+# 3) iof its measure if the point has  number of neighbors beside it or not, if not, it will be an outlier.
 
 
 # We will use Chauvenet for dealing with outliers
