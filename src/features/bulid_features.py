@@ -131,6 +131,33 @@ subset[['acc_r' , 'gyr_r' ]].plot(subplots = True)
 # Temporal abstraction
 # --------------------------------------------------------------
 
+# Rolling averages are commonly used to smooth out short-term fluctuations or noise in time-series data and highlight longer-term trends or patterns.
+# They are particularly useful for identifying patterns that might not be immediately apparent in raw data, especially when dealing with data that contains significant variability or noise.
+
+df_temporal =  df_squares.copy() 
+df_temporal
+sensor_col = sensor_col + ['acc_r' , 'gyr_r']
+NumAbs = NumericalAbstraction()
+# NumAbs.abstract_numerical(df_temporal , sensor_col , window_size=5 ,aggregation_function= 'mean' )
+# we need to make moving average on each set because each set may containing different label (exercise)
+
+df_temporal_list = []
+for set in df_temporal['set'].unique():
+    subset = df_temporal[df_temporal['set'] == set].copy()
+    
+    for col in sensor_col:
+        subset = NumAbs.abstract_numerical(subset , sensor_col , window_size=5 ,aggregation_function= 'mean' )
+        subset = NumAbs.abstract_numerical(subset , sensor_col , window_size=5 ,aggregation_function= 'std' )
+
+    df_temporal_list.append(subset)
+
+
+df_temporal_list
+df_temporal=  pd.concat(df_temporal_list)
+
+subset[['acc_y' , 'acc_y_temp_mean_ws_5' , 'acc_y_temp_std_ws_5']].plot()
+subset[['gyr_y' , 'gyr_y_temp_mean_ws_5' , 'gyr_y_temp_std_ws_5']].plot()
+
 
 # --------------------------------------------------------------
 # Frequency features
