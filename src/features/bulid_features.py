@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from DataTransformation import LowPassFilter , PrincipalComponentAnalysis
 from TemporalAbstraction import NumericalAbstraction
+from FrequencyAbstraction import FourierTransformation
+
 
 # --------------------------------------------------------------
 # Load data
@@ -135,9 +137,9 @@ subset[['acc_r' , 'gyr_r' ]].plot(subplots = True)
 # They are particularly useful for identifying patterns that might not be immediately apparent in raw data, especially when dealing with data that contains significant variability or noise.
 
 df_temporal =  df_squares.copy() 
-df_temporal
 sensor_col = sensor_col + ['acc_r' , 'gyr_r']
 NumAbs = NumericalAbstraction()
+
 # NumAbs.abstract_numerical(df_temporal , sensor_col , window_size=5 ,aggregation_function= 'mean' )
 # we need to make moving average on each set because each set may containing different label (exercise)
 
@@ -152,8 +154,7 @@ for set in df_temporal['set'].unique():
     df_temporal_list.append(subset)
 
 
-df_temporal_list
-df_temporal=  pd.concat(df_temporal_list)
+df_temporal =  pd.concat(df_temporal_list)
 
 subset[['acc_y' , 'acc_y_temp_mean_ws_5' , 'acc_y_temp_std_ws_5']].plot()
 subset[['gyr_y' , 'gyr_y_temp_mean_ws_5' , 'gyr_y_temp_std_ws_5']].plot()
@@ -163,17 +164,101 @@ subset[['gyr_y' , 'gyr_y_temp_mean_ws_5' , 'gyr_y_temp_std_ws_5']].plot()
 # Frequency features
 # --------------------------------------------------------------
 
+# The idea of a Fourier transformation is that any sequence of measurements we perform can be represented by a combination of sinusoid functions with different frequencies 
+
+#DFT can provide insight into patterns and trends that would not otherwise be visible. Additionally, the DFT can be used to reduce noise, allowing for more accurate models.
+df_frq = df_temporal.copy().reset_index()
+# df_frq
+FreqAbd = FourierTransformation()
+
+sampling_frq = int(1000 / 200)
+window_size = int (2800 / 200)
+FreqAbd.abstract_frequency(df_frq , ['acc_y'] , window_size , sampling_frq)
+subset = df_frq[df_frq['set'] == 15]
+subset[['acc_y']].plot()
+subset.columns
+# Fourier transformation  abstracted the sign into its basic constituent elements
+
+subset[['acc_y_max_freq', 'acc_y_freq_weighted', 'acc_y_pse',
+       'acc_y_freq_0.0_Hz_ws_14', 'acc_y_freq_0.357_Hz_ws_14',
+       'acc_y_freq_0.714_Hz_ws_14', 'acc_y_freq_1.071_Hz_ws_14']].plot()
+
+df_freq_list = []
+for set in df_frq['set'].unique():
+    print(f'Applying Fourier transformation to set {set}')
+    subset = df_frq[df_frq['set'] == set].reset_index(drop = True).copy()
+    
+    subset = FreqAbd.abstract_frequency(subset , sensor_col , window_size , sampling_frq)
+    
+
+    df_freq_list.append(subset)
+df_frq =  pd.concat(df_freq_list).set_index('epoch (ms)' , drop=True)
+df_frq = df_frq.drop('duration' , axis=1)
 
 # --------------------------------------------------------------
 # Dealing with overlapping windows
 # --------------------------------------------------------------
 
+# All extra features are based on moving averages, so the value between the different rows are highly correlated #And this could cause overfitting in our model
+
+# So we need dealing with that: we will take 50% from data by skipping one row in each step
+df_frq
+df_frq = df_frq.dropna()
+df_frq = df_frq.iloc[: :2]
 
 # --------------------------------------------------------------
 # Clustering
 # --------------------------------------------------------------
 
+from sklearn.cluster import KMeans
+df_cluster = df_frq.copy()
+
+cluster_col = ['acc_x' , 'acc_y' , 'acc_z']
+k_values = range(2,10)
+inertias = []
+
+for k in k_values:
+    
+    subset = df_cluster[cluster_col]
+    kmeans = KMeans(n_clusters = k  , n_init=20 , random_state=0)
+    label = kmeans.fit_predict(subset)
+    
+    inertias.append( kmeans.inertia_)
+    
+inertias
+plt.plot(k_values , inertias , '--o' ) 
+# So the 5 or 6 is the optimal number
+
+
+kmeans = KMeans(n_clusters = 6  , n_init=20 , random_state=0)
+subset = df_cluster[cluster_col]
+df_cluster['cluster'] = kmeans.fit_predict(subset)
+df_cluster
+fig = plt.figure(figsize=(15, 15))
+ax = fig.add_subplot(projection="3d")
+for c in df_cluster["cluster"].unique():
+    subset = df_cluster[df_cluster["cluster"] == c]
+    ax.scatter(subset["acc_x"], subset["acc_y"], subset["acc_z"], label=c)
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+plt.legend()
+plt.show()
+# Plot Labels
+fig = plt.figure(figsize=(15, 15))
+ax = fig.add_subplot(projection="3d")
+for l in df_cluster["label"].unique():
+    subset = df_cluster[df_cluster["label"] == l]
+    ax.scatter(subset["acc_x"], subset["acc_y"], subset["acc_z"], label=l)
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+plt.legend()
+plt.show()
+
 
 # --------------------------------------------------------------
 # Export dataset
 # --------------------------------------------------------------
+
+df_cluster.to_pickle('../../data/interim/03_data_features.pkl')
