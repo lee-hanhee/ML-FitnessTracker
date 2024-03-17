@@ -164,7 +164,7 @@ subset[['gyr_y' , 'gyr_y_temp_mean_ws_5' , 'gyr_y_temp_std_ws_5']].plot()
 # Frequency features
 # --------------------------------------------------------------
 
-# The idea of a Fourier transformation is that any sequence of measurements we perform can be represented by a combination of sinusoid functions with different frequencies 
+# The idea of a Fourier transformation is that any sequence of measurements we perform can be represented by a combination of sinusoid functionswith different frequencies 
 
 #DFT can provide insight into patterns and trends that would not otherwise be visible. Additionally, the DFT can be used to reduce noise, allowing for more accurate models.
 df_frq = df_temporal.copy().reset_index()
