@@ -33,16 +33,6 @@ df['gyr_r'] = np.sqrt(gyr_r)
 # Split data
 # --------------------------------------------------------------
 
-df['label'].unique()
-
-df_bench = df[df['label'] == 'bench']
-df_ohp = df[df['label'] == 'ohp']
-df_squat = df[df['label'] == 'squat']
-df_dead = df[df['label'] == 'dead']
-df_row = df[df['label'] == 'row']
-
-
-
 
 # --------------------------------------------------------------
 # Visualize data to identify patterns
