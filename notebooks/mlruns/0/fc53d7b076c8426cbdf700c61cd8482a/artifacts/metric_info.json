@@ -1,0 +1,12 @@
+{
+  "KNeighborsClassifier_score-10_X_test-10": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-2_X_test-2": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-3_X_test-3": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-4_X_test-4": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-5_X_test-5": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-6_X_test-6": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-7_X_test-7": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-8_X_test-8": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score-9_X_test-9": "KNeighborsClassifier.score(X=X_test, y=y_test)",
+  "KNeighborsClassifier_score_X_test": "KNeighborsClassifier.score(X=X_test, y=y_test)"
+}

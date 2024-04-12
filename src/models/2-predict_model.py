@@ -18,7 +18,33 @@ from sklearn.cluster import KMeans
 
 
 class FitnessTrackerPredictor:
+    """
+    A class for predicting fitness activities based on accelerometer and gyroscope data.
+
+    Parameters:
+    acc_path (str): File path for the accelerometer data.
+    gyr_path (str): File path for the gyroscope data.
+    model_path (str): File path for the trained prediction model.
+    cluster_model_path (str): File path for the trained clustering model.
+
+    Attributes:
+    acc_path (str): File path for the accelerometer data.
+    gyr_path (str): File path for the gyroscope data.
+    model_path (str): File path for the trained prediction model.
+    cluster_model_path (str): File path for the trained clustering model.
+
+    Methods:
+    read_data(): Read accelerometer and gyroscope data from CSV files and merge them.
+    remove_outliers(): Remove outliers from the data frame.
+    apply_feature_engineering(): Apply feature engineering to the data frame.
+    predict_activity(): Predict activity using the trained model.
+    count_repetitions(label): Count repetitions based on specific label.
+    """
     def __init__(self, acc_path, gyr_path, model_path, cluster_model_path):
+        """
+        Initialize FitnessTrackerPredictor with file paths for accelerometer, gyroscope data,
+        trained prediction model, and trained clustering model.
+        """
         self.acc_path = acc_path
         self.gyr_path = gyr_path
         self.model_path = model_path
@@ -208,6 +234,12 @@ class FitnessTrackerPredictor:
     def count_repetitions(self , label ):
         """
         Count repetitions based on specific label.
+
+        Parameters:
+        label (str): The label indicating the type of activity (e.g., 'squats', 'rows', 'ohp', 'other').
+
+        Returns:
+        int: Number of repetitions detected for the specified activity label.
         """
         data_frame = self.read_data()
         # label = self.predict_activity()
@@ -227,16 +259,13 @@ class FitnessTrackerPredictor:
 
         if label == 'squar':
             cutoff = 0.35
-            column='acc_x'
         elif label == 'row':
             cutoff = 0.65
             column = 'gyr_x'
         elif label == 'ohp':
             cutoff = 0.35
-            column='acc_x'
         elif label == 'ohp':
             cutoff = 0.8
-            column='acc_x'
         else:
             column = 'acc_x'
             cutoff = 0.4

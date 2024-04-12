@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/Users/xobed/OneDrive/Desktop/Data_science_And_ML_projects/Fitness-tracker-based-on-ML-2/notebooks/mlruns/800507475689993526/8db2029e521a4667a969f64a4c25038d/artifacts
+end_time: 1711068102567
+entry_point_name: ''
+experiment_id: '800507475689993526'
+lifecycle_stage: active
+run_id: 8db2029e521a4667a969f64a4c25038d
+run_name: orderly-slug-864
+run_uuid: 8db2029e521a4667a969f64a4c25038d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1711067675736
+status: 3
+tags: []
+user_id: xobed
