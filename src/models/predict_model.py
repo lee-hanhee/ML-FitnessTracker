@@ -14,6 +14,9 @@ import math
 import joblib
 from scipy.signal import argrelextrema
 from sklearn.cluster import KMeans
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 class FitnessTrackerPredictor:
