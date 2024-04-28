@@ -209,7 +209,7 @@ class FitnessTrackerPredictor:
             "gyr_r_freq_0.357_Hz_ws_14",
         ]
         data_frame = data_frame[feature_Set]
-        print(data_frame)
+        # print(data_frame)
         model = joblib.load(self.model_path)
         # data_frame.columns = [col.replace('_lowpass', '') for col in data_frame.columns]
         pred = model.predict(data_frame)
@@ -247,8 +247,15 @@ class FitnessTrackerPredictor:
             indexes = argrelextrema(data[column + "_lowpass"].values, np.greater)
             peaks = data.iloc[indexes]
 
-            # plt.plot(data[column + '_lowpass'])
-            # plt.plot(peaks[column + '_lowpass'] , 'o' , color = 'red')
+            plt.figure(figsize=(15, 5))
+            plt.plot(data[column + "_lowpass"])
+            plt.plot(peaks[column + "_lowpass"], "o", color="red")
+            plt.xlabel("Time")
+            plt.ylabel(column)
+            plt.savefig(
+                r"D:\Programing\Projects\Fitness-tracker-based-on-ML-2\static\pred\count_rep.png"
+            )
+            # path = '/static/pred/count_rep.jpg'
 
             return len(peaks)
 

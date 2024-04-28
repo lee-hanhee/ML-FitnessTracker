@@ -20,9 +20,6 @@ tracker_predictor = FitnessTrackerPredictor(
 )
 
 
-print("\n".join(tracker_predictor.apply_feature_engineering().columns))
-
-
 def test_read_data():
     # test the expected columns from read_data function
     actual = list(tracker_predictor.read_data().columns)
