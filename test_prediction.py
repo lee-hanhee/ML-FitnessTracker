@@ -1,3 +1,4 @@
+# Inside test_prediction.py
 from src.models.predict_model import FitnessTrackerPredictor
 import pandas as pd
 import warnings
@@ -20,6 +21,14 @@ tracker_predictor = FitnessTrackerPredictor(
 )
 
 
+print("\n".join(tracker_predictor.apply_feature_engineering().columns))
+
+
+#----------------------------------------------------------------------------------------------------
+#------------------------ test 1 -----------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+
+
 def test_read_data():
     # test the expected columns from read_data function
     actual = list(tracker_predictor.read_data().columns)
@@ -36,6 +45,11 @@ def test_read_data():
         actual, expected
     )
     assert actual < expected, message
+    
+#----------------------------------------------------------------------------------------------------
+#------------------------ test 2 -----------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+
 
 
 def test_remove_outliers():
@@ -48,6 +62,11 @@ def test_remove_outliers():
         )
     )
     assert actual <= expected, message
+    
+#----------------------------------------------------------------------------------------------------    
+#------------------------ test 3 -----------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+
 
 
 def test_apply_feature_engineering():
@@ -95,6 +114,12 @@ def test_apply_feature_engineering():
     cluster_column = {"cluster"}
     message = "apply_feature_engineering didn't return the expected cluster features"
     assert cluster_column.issubset(feature_engineering_columns), message
+
+
+#----------------------------------------------------------------------------------------------------
+#------------------------ test 4 -----------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+
 
 
 def test_predict_activity():
@@ -159,6 +184,13 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
+    
+  
+#----------------------------------------------------------------------------------------------------  
+#------------------------ test 5 -----------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+
+
 
 def test_count_repetitions():
     # test count repetitions func

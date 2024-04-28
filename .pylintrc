@@ -1,0 +1,3 @@
+
+[TYPECHECK]
+init-hook='import sys; sys.path.append("C:\\\\Users\\\\HP\\\\Fitness-tracker-based-on-ML-2\\\\src\\\\models")'

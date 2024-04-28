@@ -1,25 +1,51 @@
+"""
+This module contains the implementation of a Fitness Tracker Predictor class
+used for predicting activities based on accelerometer and gyroscope data.
+
+The FitnessTrackerPredictor class performs various tasks including:
+- Reading accelerometer and gyroscope data from CSV files
+- Removing outliers from the data frame
+- Applying feature engineering techniques such as: 
+                                                  low-pass filtering,
+                                                  PCA,
+                                                  temporal and frequency abstraction
+- Predicting activity using a trained model
+- Counting repetitions based on specific activity labels
+
+The module also imports necessary libraries and modules for data manipulation,
+visualization, and machine learning tasks.
+
+"""
+import warnings
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import seaborn as sns
-import math
-import scipy
-from sklearn.neighbors import LocalOutlierFactor  # pip install scikit-learn
-from src.models.outliers_remove import mark_outliers_chauvenet
-from src.models.DataTransformation import LowPassFilter, PrincipalComponentAnalysis
-from src.models.TemporalAbstraction import NumericalAbstraction
-from src.models.FrequencyAbstraction import FourierTransformation
-import math
 import joblib
 from scipy.signal import argrelextrema
-from sklearn.cluster import KMeans
-import warnings
-
+from src.models.outliers_remove import mark_outliers_chauvenet
+from src.models.DataTransformation import LowPassFilter , PrincipalComponentAnalysis
+from src.models.TemporalAbstraction import NumericalAbstraction
+from src.models.FrequencyAbstraction import FourierTransformation
 warnings.filterwarnings("ignore")
+# from sklearn.neighbors import LocalOutlierFactor  # pip install scikit-learn
 
 
 class FitnessTrackerPredictor:
+    """
+    A class for predicting activities based on accelerometer and gyroscope data.
+
+    This class provides methods to read data from CSV files, preprocess the data
+    by removing outliers and applying feature engineering techniques such as low-pass
+    filtering, PCA, temporal and frequency abstraction. It also includes methods
+    for predicting activity using a trained model and counting repetitions based on
+    specific activity labels.
+
+    Attributes:
+        acc_path (str): The file path of the accelerometer data CSV file.
+        gyr_path (str): The file path of the gyroscope data CSV file.
+        model_path (str): The file path of the trained model for activity prediction.
+        cluster_model_path (str): The file path of the trained clustering model.
+    """
+
     def __init__(self, acc_path, gyr_path, model_path, cluster_model_path):
         self.acc_path = acc_path
         self.gyr_path = gyr_path
@@ -55,12 +81,16 @@ class FitnessTrackerPredictor:
         }
 
         data_merged[:1000].resample(rule="200ms").apply(sampling)
-        # This means every 200ms, we take all measurement and put them into one record by taking the mean for them
+        # Every 200ms, we average measurements to create one record.
 
-        # but if making that in hole data set at same time this message will display: MemoryError: Unable to allocate 210. MiB for an array with shape (7, 3932145) and data type float64
-        # so we will divide the df into small groups by grouping them by days and then concatenate again
+        # If making that in hole data set at same time,
+        # this message will display: MemoryError: Unable to allocate 210.
+        # MiB for an array with shape (7, 3932145) and data type float64
+        # To handle this, we split the dataframe into smaller groups by day, then concatenate them.
+
+
         days = [g for n, g in data_merged.groupby(pd.Grouper(freq="D"))]
-        days[0]
+        #days[0]
 
         data_resampled = pd.concat(
             [df.resample(rule="200ms").apply(sampling).dropna() for df in days]
@@ -86,32 +116,34 @@ class FitnessTrackerPredictor:
         df_lowpass = self.remove_outliers()
         sensor_col = list(df_lowpass.columns)
 
-        LowPass = LowPassFilter()
+        low_pass = LowPassFilter()
 
         sampling_frq = (
             1000 / 200
-        )  # # because we are taking the record every 200 ms, so that line calculates number of repetition in 1 sec
+        )
+        # As data is recorded every 200 ms, this line computes the number of repetitions per second.
+
 
         cutoff_frq = 1.3  # the low cutoff frequency, meaning more smoothing in signal
 
         # LowPass.low_pass_filter(df_lowpass , 'acc_y' , sampling_frq , cutoff_frq)
 
         for col in df_lowpass.columns:
-            df_lowpass = LowPass.low_pass_filter(
+            df_lowpass = low_pass.low_pass_filter(
                 df_lowpass, col, sampling_frq, cutoff_frq, order=5
             )
             df_lowpass[col] = df_lowpass[col + "_lowpass"]
             del df_lowpass[col + "_lowpass"]
 
         print("in low pass filter:", len(df_lowpass))
-        # ---------------------------------------PCA-------------------------------------------------------
+        # ----------------PCA----------------
 
         df_pca = df_lowpass.copy()
-        PCA = PrincipalComponentAnalysis()
+        pca = PrincipalComponentAnalysis()
 
-        df_pca = PCA.apply_pca(df_pca, df_lowpass.columns, 3)
+        df_pca = pca.apply_pca(df_pca, df_lowpass.columns, 3)
 
-        # -----------------------------------squares------------------------------------------------------
+        # ----------------squares----------------
 
         df_squares = df_pca.copy()
 
@@ -134,17 +166,20 @@ class FitnessTrackerPredictor:
         # ------------------------------------temporal ------------------------------------
         df_temporal = df_squares.copy()
         sensor_col = sensor_col + ["acc_r", "gyr_r"]
-        NumAbs = NumericalAbstraction()
+        #NumAbs = NumericalAbstraction()
+        num_abs = NumericalAbstraction()
 
-        # NumAbs.abstract_numerical(df_temporal , sensor_col , window_size=5 ,aggregation_function= 'mean' )
-        # we need to make moving average on each set because each set may containing different label (exercise)
+        # NumAbs.abstract_numerical(df_temporal, sensor_col,
+        #                           window_size=5, aggregation_function = 'mean')
+        # Moving averages are required for each set due to potential label differences on each set.
 
-        df_temporal_list = []
+
+        # df_temporal_list = []
         for col in sensor_col:
-            subset = NumAbs.abstract_numerical(
+            subset = num_abs.abstract_numerical(
                 df_temporal, sensor_col, window_size=5, aggregation_function="mean"
             )
-            subset = NumAbs.abstract_numerical(
+            subset = num_abs.abstract_numerical(
                 subset, sensor_col, window_size=5, aggregation_function="std"
             )
 
@@ -152,18 +187,19 @@ class FitnessTrackerPredictor:
 
         print("in low PCA:", len(df_temporal))
 
-        # -----------------------------------FourierTransformation-----------------------------------
+        # -----------------------------------FourierTransformation-----------------------------
 
         df_frq = df_temporal.copy().reset_index()
         # df_frq
-        FreqAbd = FourierTransformation()
+        #FreqAbd = FourierTransformation()
+        freq_abd = FourierTransformation()
 
         sampling_frq = int(1000 / 200)
         window_size = int(2800 / 200)
 
         subset = df_frq.reset_index(drop=True).copy()
 
-        subset = FreqAbd.abstract_frequency(
+        subset = freq_abd.abstract_frequency(
             subset, sensor_col, window_size, sampling_frq
         )
 
@@ -173,10 +209,11 @@ class FitnessTrackerPredictor:
         # Dealing with overlapping windows
         # --------------------------------------------------------------
 
-        # All extra features are based on moving averages, so the value between the different rows are highly correlated #And this could cause overfitting in our model
+        # All extra features are based on moving averages,
+        # so the value between the different rows are highly correlated
+        # And this could cause overfitting in our model
 
         # So we need dealing with that: we will take 50% from data by skipping one row in each step
-        df_frq
         df_frq = df_frq.dropna()
         df_frq = df_frq.iloc[::2]
 
@@ -196,7 +233,7 @@ class FitnessTrackerPredictor:
 
         """
         data_frame = self.apply_feature_engineering()
-        feature_Set = [
+        feature_set = [
             "acc_y_temp_std_ws_5",
             "gyr_z_temp_std_ws_5",
             "acc_y_freq_0.0_Hz_ws_14",
@@ -235,12 +272,12 @@ class FitnessTrackerPredictor:
             dataset["acc_r"] = np.sqrt(acc_r)
             dataset["gyr_r"] = np.sqrt(gyr_r)
 
-            fs = 1000 / 200
+            freq_sampling = 1000 / 200
             lowpass = LowPassFilter()
             data = lowpass.low_pass_filter(
                 dataset,
                 col=column,
-                sampling_frequency=fs,
+                sampling_frequency=freq_sampling,
                 cutoff_frequency=cutoff,
                 order=order,
             )
