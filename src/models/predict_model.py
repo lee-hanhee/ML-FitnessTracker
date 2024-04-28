@@ -6,9 +6,9 @@ The FitnessTrackerPredictor class performs various tasks including:
 - Reading accelerometer and gyroscope data from CSV files
 - Removing outliers from the data frame
 - Applying feature engineering techniques such as: 
-                                                  low-pass filtering,
-                                                  PCA,
-                                                  temporal and frequency abstraction
+        low-pass filtering,
+        PCA,
+        temporal and frequency abstraction
 - Predicting activity using a trained model
 - Counting repetitions based on specific activity labels
 
@@ -19,6 +19,7 @@ visualization, and machine learning tasks.
 import warnings
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import joblib
 from scipy.signal import argrelextrema
 from src.models.outliers_remove import mark_outliers_chauvenet
