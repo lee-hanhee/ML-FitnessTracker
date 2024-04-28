@@ -245,7 +245,7 @@ class FitnessTrackerPredictor:
             "gyr_r_freq_0.0_Hz_ws_14",
             "gyr_r_freq_0.357_Hz_ws_14",
         ]
-        data_frame = data_frame[feature_Set]
+        data_frame = data_frame[feature_set]
         # print(data_frame)
         model = joblib.load(self.model_path)
         # data_frame.columns = [col.replace('_lowpass', '') for col in data_frame.columns]
