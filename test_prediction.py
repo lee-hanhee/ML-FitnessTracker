@@ -2,6 +2,7 @@
 from src.models.predict_model import FitnessTrackerPredictor
 import pandas as pd
 import warnings
+import matplotlib.pyplot as plt
 
 warnings.filterwarnings("ignore")
 
@@ -24,9 +25,9 @@ tracker_predictor = FitnessTrackerPredictor(
 print("\n".join(tracker_predictor.apply_feature_engineering().columns))
 
 
-#----------------------------------------------------------------------------------------------------
-#------------------------ test 1 -----------------------------------------------------------
-#----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# ------------------------ test 1 -----------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 
 def test_read_data():
@@ -45,11 +46,11 @@ def test_read_data():
         actual, expected
     )
     assert actual < expected, message
-    
-#----------------------------------------------------------------------------------------------------
-#------------------------ test 2 -----------------------------------------------------------
-#----------------------------------------------------------------------------------------------------
 
+
+# ----------------------------------------------------------------------------------------------------
+# ------------------------ test 2 -----------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 
 def test_remove_outliers():
@@ -62,11 +63,11 @@ def test_remove_outliers():
         )
     )
     assert actual <= expected, message
-    
-#----------------------------------------------------------------------------------------------------    
-#------------------------ test 3 -----------------------------------------------------------
-#----------------------------------------------------------------------------------------------------
 
+
+# ----------------------------------------------------------------------------------------------------
+# ------------------------ test 3 -----------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 
 def test_apply_feature_engineering():
@@ -116,15 +117,14 @@ def test_apply_feature_engineering():
     assert cluster_column.issubset(feature_engineering_columns), message
 
 
-#----------------------------------------------------------------------------------------------------
-#------------------------ test 4 -----------------------------------------------------------
-#----------------------------------------------------------------------------------------------------
-
+# ----------------------------------------------------------------------------------------------------
+# ------------------------ test 4 -----------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 
 def test_predict_activity():
     labels = ["bench", "dead", "ohp", "row", "squat", "rest"]
-    
+
     # test the bench label
     bench_acc_path = "data/raw/MetaMotion/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
     bench_gyr_path = "data/raw/MetaMotion/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
@@ -134,7 +134,7 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
-    
+
     # test the dead label
     dead_acc_path = "data/raw/MetaMotion/A-dead-heavy_MetaWear_2019-01-15T20.35.27.174_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
     dead_gyr_path = "data/raw/MetaMotion/A-dead-heavy_MetaWear_2019-01-15T20.35.27.174_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
@@ -144,7 +144,7 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
-    
+
     # test the ohp label
     ohp_acc_path = "data/raw/MetaMotion/A-ohp-heavy1-rpe8_MetaWear_2019-01-11T16.38.54.580_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
     ohp_gyr_path = "data/raw/MetaMotion/A-ohp-heavy1-rpe8_MetaWear_2019-01-11T16.38.54.580_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
@@ -154,7 +154,7 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
-    
+
     # test the row label
     row_acc_path = "data/raw/MetaMotion/A-row-heavy_MetaWear_2019-01-14T15.04.06.123_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
     row_gyr_path = "data/raw/MetaMotion/A-row-heavy_MetaWear_2019-01-14T15.04.06.123_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
@@ -164,7 +164,7 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
-    
+
     # test the squat label
     squat_acc_path = "data/raw/MetaMotion/A-squat-heavy_MetaWear_2019-01-15T20.04.08.637_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
     squat_gyr_path = "data/raw/MetaMotion/A-squat-heavy_MetaWear_2019-01-15T20.04.08.637_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
@@ -174,7 +174,7 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
-    
+
     # test the rest label
     rest_acc_path = "data/raw/MetaMotion/A-rest-sitting_MetaWear_2019-01-18T18.22.25.565_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
     rest_gyr_path = "data/raw/MetaMotion/A-rest-sitting_MetaWear_2019-01-18T18.22.25.565_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
@@ -184,12 +184,11 @@ def test_predict_activity():
     predicted_label = tracker_predictor.predict_activity()
     message = f"predict_activity return {predicted_label} and didn't return any of the expected labels {labels}"
     assert predicted_label in labels, message
-    
-  
-#----------------------------------------------------------------------------------------------------  
-#------------------------ test 5 -----------------------------------------------------------
-#----------------------------------------------------------------------------------------------------
 
+
+# ----------------------------------------------------------------------------------------------------
+# ------------------------ test 5 -----------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 
 def test_count_repetitions():
