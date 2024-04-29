@@ -1,12 +1,9 @@
-from flask import Flask, render_template, request
-
-import sys
 import glob
 import os
 
-
-sys.path.append("src/models/predict_model.py")
 from src.models.predict_model import FitnessTrackerPredictor
+from flask import Flask, render_template, request
+
 
 app = Flask(
     __name__,
