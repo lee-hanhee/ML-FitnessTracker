@@ -1,5 +1,8 @@
 ![image](https://github.com/Veto2922/Fitness-tracker-based-on-ML-2/assets/114834171/d4b0aaa5-52af-45a9-9ef8-d572bdab7442)
 
+![image](https://github.com/Veto2922/Fitness-tracker-based-on-ML-2/assets/114834171/baf387f1-b83f-4ff8-9311-db09e3c74b42)
+
+
 ## Project Organization
 
     ├── LICENSE
