@@ -12,20 +12,4 @@ scikit-learn==1.2.2
 seaborn==0.12.2
 streamlit==1.29.0
 
-# -e .
 
-<<<<<<< HEAD
-# # external requirements
-# click
-# Sphinx
-# coverage
-# awscli
-# python-dotenv>=0.5.1
-=======
-# external requirements
-click
-Sphinx
-coverage
-awscli
-python-dotenv>=0.5.1
->>>>>>> 36a2a2d584f13c67370ffd8bdc4e117e6f763ec1
