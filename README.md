@@ -1,3 +1,4 @@
+![image](https://github.com/Veto2922/Fitness-tracker-based-on-ML-2/assets/114834171/d4b0aaa5-52af-45a9-9ef8-d572bdab7442)
 
 ## Project Organization
 
