@@ -19,17 +19,36 @@ def index():
 
 @app.route("/", methods=["GET", "POST"])
 def predict():
+<<<<<<< HEAD
+    
+    
+
+    output_dir = 'static\pred'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    files = glob.glob("static\pred\*")
+=======
 
     files = glob.glob("./static/pred/*")
+>>>>>>> 36a2a2d584f13c67370ffd8bdc4e117e6f763ec1
     for f in files:
         os.remove(f)
 
     accfile = request.files["accfile"]
+<<<<<<< HEAD
+    acc_path = "static\pred" + accfile.filename
+    accfile.save(acc_path)
+
+    gyrfile = request.files["gyrfile"]
+    gyr_path = "static\pred\\" + gyrfile.filename
+=======
     acc_path = "./static/pred/" + accfile.filename
     accfile.save(acc_path)
 
     gyrfile = request.files["gyrfile"]
     gyr_path = "./static/pred/" + gyrfile.filename
+>>>>>>> 36a2a2d584f13c67370ffd8bdc4e117e6f763ec1
     gyrfile.save(gyr_path)
 
     # Model paths
@@ -45,7 +64,11 @@ def predict():
 
     if label == "bench":
         prediction = "Bench Press"
+<<<<<<< HEAD
+        img = "\static\web\Barbell Bench Press.gif"
+=======
         img = "./static/web/Barbell Bench Press.gif"
+>>>>>>> 36a2a2d584f13c67370ffd8bdc4e117e6f763ec1
     elif label == "squat":
         prediction = "Squat"
         img = "./static/web/BARBELL SQUAT.gif"
@@ -80,4 +103,8 @@ def predict():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
+    app.run(debug= True , host='0.0.0.0' , port = 5000 )
+=======
     app.run()
+>>>>>>> 36a2a2d584f13c67370ffd8bdc4e117e6f763ec1

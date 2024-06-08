@@ -1,4 +1,36 @@
 import streamlit as st
+import os
+
+# Set Streamlit server configuration
+os.environ["STREAMLIT_SERVER_HEADLESS"] = "true"
+os.environ["STREAMLIT_SERVER_PORT"] = "8501"
+os.environ["STREAMLIT_SERVER_ADDRESS"] = "0.0.0.0"
+
+# Set the default theme to dark mode
+st.set_page_config(
+    layout="centered",
+    initial_sidebar_state="auto",
+    page_title="🏋️ Fitness Tracker App 🏋️",
+    page_icon="🏋️",
+)
+
+st.markdown(
+    """
+    <style>
+    .css-18e3th9 {
+        background-color: #0e1117;
+    }
+    .css-1d391kg {
+        background-color: #0e1117;
+    }
+    .css-1dp5vir {
+        background-color: #0e1117;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 from src.models.predict_model import FitnessTrackerPredictor
 
 # Function to load model and perform prediction
@@ -14,8 +46,8 @@ def predict_activity(acc_path, gyr_path, model_path, cluster_model_path):
     
     return label, repetition_count
 
-# Streamlit app
-def main():
+# Streamlit app  
+def main(): 
     st.title("🏋️ Fitness Tracker App 🏋️")
     st.markdown("---")
 
@@ -50,9 +82,11 @@ def main():
                     'bench': "https://media0.giphy.com/media/QvXVzMT3oziRDud6df/giphy.gif?cid=6c09b952t6mmzaj7khyy3ktbi3z8vag08osrgrzwtqkbkhae&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s",
                     'dead': "https://www.journalmenu.com/wp-content/uploads/2017/10/Deadlift-gif-front-view.gif",
                     'ohp': "https://newlife.com.cy/wp-content/uploads/2019/12/00911301-Barbell-Seated-Overhead-Press_Shoulders_360.gif",
-                    'squat': "https://i.pinimg.com/originals/9c/03/18/9c031803079f20de203ac00a52edfbe5.gif"
+               
                 }
                 st.image(gif_url[label], use_column_width=True)
+                st.subheader("Count repetitions")
+                st.image('static/pred/count_rep.jpg', use_column_width=True)
 
             # Show uploaded files
             st.subheader("📂 Uploaded Files")
