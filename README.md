@@ -23,7 +23,6 @@ Below is a block diagram illustrating the architecture of the Fitness Tracker Ba
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Contact Information](#contact-information)
 
