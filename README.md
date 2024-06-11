@@ -8,7 +8,6 @@ Imagine yourself at the gym, pushing through your strength training routine, but
 
 
 ## Project Video Demonstration
-Watch the video demonstration of the app in action:
 
 
 https://github.com/Veto2922/Fitness-tracker-based-on-ML-2/assets/73383924/7008bb17-113c-43cd-9c31-26f7f75c0c4d
