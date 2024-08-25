@@ -67,9 +67,7 @@ final_dataset.columns = [
     "set"
 ]
 
-# --------------------------------------------------------------
 # Resample data (frequency conversion)
-# --------------------------------------------------------------
 
 # Accelerometer:    12.500HZ
 # Gyroscope:        25.000Hz
@@ -98,8 +96,5 @@ data_resampled.info()
 
 data_resampled["set"] = data_resampled["set"].astype("int")
 
-# --------------------------------------------------------------
 # Export dataset
-# --------------------------------------------------------------
-
 data_resampled.to_pickle("../../data/interim/01_data_processed.pkl")
